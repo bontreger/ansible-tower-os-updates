@@ -34,7 +34,7 @@
       exclude: "{{ excluded_package_list }}"
 
   - name: "Check for reboot hint"
-    command: "needs-rebooting -r ; echo $?"
+    command: "needs-restarting -r ; echo $?"
     register: reboot_hint
 
   - name: "If no reboot is required, provide status message"
