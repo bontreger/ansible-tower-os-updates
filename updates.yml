@@ -34,24 +34,24 @@
       exclude: "{{ excluded_package_list }}"
 
   - name: "Check for reboot hint"
-    command: "needs-restarting -r ; echo $?"
+    command: "needs-restarting -r"
     register: reboot_hint
 
   - name: "debug message"
     debug:
-      msg: "{{ reboot_hint.stdout }}"
+      msg: "{{ reboot_hint.stdout }}, return code {{ reboot_hint.rc }}"
       
   - name: "If no reboot is required, provide status message"
     debug:
       msg: "Patching complete, no reboot required"
-    when: reboot_hint.stdout == 0
+    when: reboot_hint.rc == 0
 
   - name: "If reboot is required, but reboot is set false, provide notice"
     debug:
       msg: "NOTICE!!! REBOOT REQUIRED TO FINISH PATCHING"
-    when: ( reboot_hint.stdout == 1 ) and ( automatic_reboot == "false" )
+    when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "false" )
 
   - name: "If reboot is required and reboot flag is set, reboot"
     command: "shutdown -h 30 'Reboot required for patches'"
-    when: ( reboot_hint.stdout == 1 ) and ( automatic_reboot == "true" )
+    when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "true" )
 ...
