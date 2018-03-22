@@ -26,14 +26,14 @@
     yum: 
       name: ansible
       state: latest
-    when: ( update_ansible_core == 'true' ) and ( perform_updates == 'true' )
+    when: ( update_ansible_core == true ) and ( perform_updates == true )
 
   - name: "Update all packages excluding specific ansible-tower packages"
     yum:
       name: '*'
       state: latest
       exclude: "{{ excluded_package_list }}"
-    when: perform_updates == 'true'
+    when: perform_updates == true
 
   - name: "Check for reboot hint"
     command: "needs-restarting -r"
@@ -51,9 +51,9 @@
   - name: "If reboot is required, but reboot is set false, provide notice"
     debug:
       msg: "NOTICE!!! REBOOT REQUIRED TO FINISH PATCHING"
-    when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "false" )
+    when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == false )
  
   - name: "If reboot is required and reboot flag is set, reboot"
     command: "shutdown -h 30 'Reboot required for patches'"
-    when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "true" )
+    when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == true )
 ...
