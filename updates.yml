@@ -36,10 +36,6 @@
   - name: "Check for reboot hint"
     command: "needs-restarting -r"
     register: reboot_hint
-
-  - name: "debug message"
-    debug:
-      msg: "{{ reboot_hint.stdout }}, return code {{ reboot_hint.rc }}"
       
   - name: "If no reboot is required, provide status message"
     debug:
