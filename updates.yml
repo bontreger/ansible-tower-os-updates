@@ -37,6 +37,10 @@
     command: "needs-restarting -r ; echo $?"
     register: reboot_hint
 
+  - name: "debug message"
+    debug:
+      msg: "{{ reboot_hint.stdout }}"
+      
   - name: "If no reboot is required, provide status message"
     debug:
       msg: "Patching complete, no reboot required"
