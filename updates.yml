@@ -45,9 +45,9 @@
   - name: "If reboot is required, but reboot is set false, provide notice"
     debug:
       msg: "NOTICE!!! REBOOT REQUIRED TO FINISH PATCHING"
-    when: ( reboot_hint.stdout == 1 ) && ( automatic_reboot is false )
+    when: ( reboot_hint.stdout == 1 ) and ( automatic_reboot is false )
 
   - name: "If reboot is required and reboot flag is set, reboot"
     command: "shutdown -h 30 'Reboot required for patches'"
-    when: ( reboot_hint.stdout == 1 ) && ( automatic_reboot is true )
+    when: ( reboot_hint.stdout == 1 ) and ( automatic_reboot is true )
 ...
