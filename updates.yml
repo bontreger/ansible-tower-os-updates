@@ -57,5 +57,5 @@
       - name: "If reboot is required and reboot flag is set, reboot"
         command: "shutdown -h 30 'Reboot required for patches'"
         when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "true" )
-    when: perform_updates == "true"
+    when: perform_updates == 'true'
 ...
