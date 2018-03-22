@@ -22,39 +22,40 @@
   - name: "Add tower packages to versionlock"
     command: "yum versionlock {{ excluded_package_list }}"
 
-  - block:
-    - name: "Updating ansible core"
-      yum: 
-        name: ansible
-        state: latest
-      when: update_ansible_core
+  - name: "Update packages"
+    block:
+      - name: "Updating ansible core"
+        yum: 
+          name: ansible
+          state: latest
+        when: update_ansible_core
 
-    - name: "Update all packages excluding specific ansible-tower packages"
-      yum:
-        name: '*'
-        state: latest
-        exclude: "{{ excluded_package_list }}"
+      - name: "Update all packages excluding specific ansible-tower packages"
+        yum:
+          name: '*'
+          state: latest
+          exclude: "{{ excluded_package_list }}"
     
-    - name: "Check for reboot hint"
-      command: "needs-restarting -r"
-      register: reboot_hint
+      - name: "Check for reboot hint"
+        command: "needs-restarting -r"
+        register: reboot_hint
       
-    - name: "Debug"
-      debug:
-        msg: "hint is {{ reboot_hint.stdout }} and rc is {{ reboot_hint.rc }}"
+      - name: "Debug"
+        debug:
+          msg: "hint is {{ reboot_hint.stdout }} and rc is {{ reboot_hint.rc }}"
       
-    - name: "If no reboot is required, provide status message"
-      debug:
-        msg: "Patching complete, no reboot required"
-      when: reboot_hint.rc == 0
+      - name: "If no reboot is required, provide status message"
+        debug:
+          msg: "Patching complete, no reboot required"
+        when: reboot_hint.rc == 0
 
-    - name: "If reboot is required, but reboot is set false, provide notice"
-      debug:
-        msg: "NOTICE!!! REBOOT REQUIRED TO FINISH PATCHING"
-      when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "false" )
+      - name: "If reboot is required, but reboot is set false, provide notice"
+        debug:
+          msg: "NOTICE!!! REBOOT REQUIRED TO FINISH PATCHING"
+        when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "false" )
 
-    - name: "If reboot is required and reboot flag is set, reboot"
-      command: "shutdown -h 30 'Reboot required for patches'"
-      when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "true" )
+      - name: "If reboot is required and reboot flag is set, reboot"
+        command: "shutdown -h 30 'Reboot required for patches'"
+        when: ( reboot_hint.rc == 1 ) and ( automatic_reboot == "true" )
     when: perform_updates == "true"
 ...
