@@ -1,14 +1,13 @@
 ---
 - hosts: localhost
   vars:
-     automatic_reboot: false
-     perform_updates: true
-     update_ansible_core: false
-     #Safe package list (all packages in the bundle)
-     excluded_package_list: "ansible-2*, ansible-tower*, bubblewrap*, erlang*, libtomcrypt*, lobtommath*, lyx-fonts*, 1:nginx*, postgresql96*, python-meld3*, python-psycopg2*, python2-crypto*, python2-ecdsa*, python2-paramiko*, python2-psutil*, rabbitmq*, sshpass*, supervisor*"
-     #Short package list (Python specific modules and ansible tower specifics)
-     #excluded_package_list: "ansible-tower*, rabbit*, python-meld3*, python-psycopg2*, python2-crypto*, python2-ecdsa*, python2-paramiko*, python2-psutil*, postgresql96*"
-     
+    automatic_reboot: false
+    perform_updates: true
+    update_ansible_core: false
+    #Safe package list (all packages in the bundle)
+    excluded_package_list: ["ansible-2*, ansible-tower*, bubblewrap*, erlang*, libtomcrypt*, lobtommath*, lyx-fonts*, 1:nginx*, postgresql96*, python-meld3*, python-psycopg2*, python2-crypto*, python2-ecdsa*, python2-paramiko*, python2-psutil*, rabbitmq*, sshpass*, supervisor*"]
+    #Short package list (Python specific modules and ansible tower specifics)
+    #excluded_package_list: "ansible-tower*, rabbit*, python-meld3*, python-psycopg2*, python2-crypto*, python2-ecdsa*, python2-paramiko*, python2-psutil*, postgresql96*"   
   tasks:
   - name: "Install yum-utils if not already present"
     yum:
@@ -23,7 +22,8 @@
       state: latest
 
   - name: "Add tower packages to versionlock"
-    command: "yum versionlock {{ excluded_package_list }}"
+    command: "yum versionlock {{ item }}"
+    with_items: "{{ excluded_package_list }}"
 
   - name: "Updating ansible core"
     yum: 
@@ -35,7 +35,7 @@
     yum:
       name: '*'
       state: latest
-      exclude: "{{ excluded_package_list }}"
+      exclude: "{{ ' ,'.join(excluded_package_list) }}"
     when: perform_updates == true
 
   - name: "Check for reboot hint"
