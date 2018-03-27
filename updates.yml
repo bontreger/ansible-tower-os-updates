@@ -3,11 +3,11 @@
   vars:
      automatic_reboot: false
      perform_updates: true
-     update_ansible_core: true
+     update_ansible_core: false
      #Safe package list (all packages in the bundle)
-     #excluded_package_list: "ansible-2*, ansible-tower*, bubblewrap*, erlang*, libtomcrypt*, lobtommath*, lyx-fonts*, 1:nginx*, postgresql96*, python-meld3*, python-psycopg2*, python2-crypto*, python2-ecdsa*, python2-paramiko*, python2-psutil*, rabbitmq*, sshpass*, supervisor*"
-     #Short package list
-     excluded_package_list: "ansible-tower*, rabbit*, python*, postgresql96*"
+     excluded_package_list: "ansible-2*, ansible-tower*, bubblewrap*, erlang*, libtomcrypt*, lobtommath*, lyx-fonts*, 1:nginx*, postgresql96*, python-meld3*, python-psycopg2*, python2-crypto*, python2-ecdsa*, python2-paramiko*, python2-psutil*, rabbitmq*, sshpass*, supervisor*"
+     #Short package list (Python specific modules and ansible tower specifics)
+     #excluded_package_list: "ansible-tower*, rabbit*, python-meld3*, python-psycopg2*, python2-crypto*, python2-ecdsa*, python2-paramiko*, python2-psutil*, postgresql96*"
      
   tasks:
   - name: "Install yum-utils if not already present"
